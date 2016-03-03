@@ -1,0 +1,20 @@
+{
+    "name": "flanson/lone-wolf",
+    "description": "Lone Wolf Game for private purpose",
+    "type": "library",
+    "require": {
+        "phpspec/phpspec": "^2.4"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {"psr-0": {"": "src"}},
+    "license": "Private",
+    "authors": [
+        {
+            "name": "flanson",
+            "email": "f.lanson@eurelis.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
