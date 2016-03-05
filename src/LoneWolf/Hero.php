@@ -2,38 +2,47 @@
 
 namespace LoneWolf;
 
-use LoneWolf\Exceptions\ConstructorException;
 use LoneWolf\Exceptions\GameException;
+use LoneWolf\Story\Destination;
 
 class Hero
 {
     /**
-     * @var CombatSkill
+     * @var Characteristics
      */
-    private $combatSkill;
-    /**
-     * @var Endurance
-     */
-    private $endurance;
+    private $characteristics;
+
     /**
      * @var Story
      */
     private $currentStory = null;
+    /**
+     * @var Destination
+     */
+    private $currentLocation = null;
 
     /**
      * Hero constructor.
-     * @param CombatSkill $combatSkill
-     * @param Endurance $endurance
-     * @throws ConstructorException
+     * @param Characteristics $characteristics
      */
-    public function __construct(CombatSkill $combatSkill, Endurance $endurance)
+    public function __construct(Characteristics $characteristics)
     {
-        if ($endurance->isNegative()) {
-            throw new ConstructorException('You can\'t have a negative CombatSkill value');
-        }
-        $this->combatSkill = $combatSkill;
-        $this->endurance = $endurance;
+        $this->characteristics = $characteristics;
     }
+
+    /*
+     * Characteristics management
+     */
+
+    public function modifyCharacteristics(Characteristics $characteristics)
+    {
+        $this->characteristics = $characteristics;
+        return $this;
+    }
+
+    /*
+     * Story
+     */
 
     public function beginAdventure(Story $story)
     {
@@ -47,22 +56,59 @@ class Hero
         $this->currentStory = null;
     }
 
+    public function travelTo(Destination $newDestination)
+    {
+        $this->aHeroCantTravelWhenNoStoryIsOngoing();
+        $this->currentLocation = $newDestination;
+    }
+
+//    public function __toString()
+//    {
+//
+//    }
+
+    /*
+     * Get info from Hero
+     */
+
+    //@todo tell, don't ask => should be private
     public function hasACurrentStory()
     {
         return ($this->currentStory !== null);
     }
 
-    public function aHeroCanOnlyHaveOneOngoingAdventure()
+    //@todo tell, don't ask => should be private
+    public function getCurrentLocation()
+    {
+        if (!$this->hasACurrentStory()) {
+            //@Todo return destinationNowhere
+            return null;
+        }
+        return $this->currentLocation;
+    }
+
+    /*
+     * Spec of Hero
+     */
+
+    private function aHeroCanOnlyHaveOneOngoingAdventure()
     {
         if ($this->hasACurrentStory()) {
             throw new GameException('You can\'t start a new adventure if you haven\'t finish your current one');
         }
     }
 
-    public function aHeroCantAbandonWhenNoStoryHasBegun()
+    private function aHeroCantAbandonWhenNoStoryHasBegun()
     {
         if (!$this->hasACurrentStory()) {
             throw new GameException('You can\'t abandon an adventure if you don\'t have one');
+        }
+    }
+
+    private function aHeroCantTravelWhenNoStoryIsOngoing()
+    {
+        if (!$this->hasACurrentStory()) {
+            throw new GameException('You can\'t wanderer anywhere you want when you have no story ongoing');
         }
     }
 }
