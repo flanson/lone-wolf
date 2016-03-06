@@ -40,6 +40,18 @@ class Hero
         return $this;
     }
 
+    //TODO factorise with Enemy
+    function hit(Hit $hit)
+    {
+        $this->characteristics->hitEndurance($hit);
+    }
+
+    //TODO factorise with Enemy
+    function cure(Cure $cure)
+    {
+        $this->characteristics->cureEndurance($cure);
+    }
+
     /*
      * Story
      */

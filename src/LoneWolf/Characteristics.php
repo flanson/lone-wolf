@@ -23,10 +23,29 @@ class Characteristics
      */
     public function __construct(CombatSkill $combatSkill, Endurance $endurance)
     {
+        $this->aNewCharacteristicsCantHaveANegativeEndurance($endurance);
+        $this->combatSkill = $combatSkill;
+        $this->endurance = $endurance;
+    }
+
+    function hitEndurance(Hit $hit)
+    {
+
+    }
+
+    function cureEndurance(Cure $cure)
+    {
+
+    }
+
+    /**
+     * @param Endurance $endurance
+     * @throws ConstructorException
+     */
+    public function aNewCharacteristicsCantHaveANegativeEndurance(Endurance $endurance)
+    {
         if ($endurance->isNegative()) {
             throw new ConstructorException('You can\'t have a negative CombatSkill value');
         }
-        $this->combatSkill = $combatSkill;
-        $this->endurance = $endurance;
     }
 }

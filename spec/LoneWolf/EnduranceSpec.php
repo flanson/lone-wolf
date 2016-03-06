@@ -23,13 +23,13 @@ class EnduranceSpec extends ObjectBehavior
         $this->shouldBeNegative();
     }
 
-    function it_should_allow_to_add()
-    {
+//    function it_should_allow_to_add()
+//    {
+//
+//    }
 
-    }
-
-    function it_should_allow_to_remove()
-    {
-
-    }
+//    function it_should_allow_to_remove()
+//    {
+//
+//    }
 }

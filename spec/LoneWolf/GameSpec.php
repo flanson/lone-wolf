@@ -3,10 +3,14 @@
 namespace spec\LoneWolf;
 
 use LoneWolf\Characteristics;
+use LoneWolf\Combat;
 use LoneWolf\CombatSkill;
+use LoneWolf\Cure;
 use LoneWolf\Endurance;
+use LoneWolf\Enemy;
 use LoneWolf\Game;
 use LoneWolf\Hero;
+use LoneWolf\Hit;
 use LoneWolf\Story;
 use LoneWolf\Story\Destination;
 use PhpSpec\ObjectBehavior;
@@ -14,6 +18,12 @@ use Prophecy\Argument;
 
 class GameSpec extends ObjectBehavior
 {
+    const GAME_EXCEPTION_NAME = 'LoneWolf\Exceptions\GameException';
+
+    /*
+     * Tools functions
+     */
+
     public function createMyTestHero()
     {
         $combatSkill = new CombatSkill(6);
@@ -64,37 +74,80 @@ class GameSpec extends ObjectBehavior
 
     function it_should_not_allow_to_modify_a_hero_characteristics_with_no_hero_defined()
     {
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('modifyHeroCharacteristics', [$this->createMyNewCharacteristics()]);
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('modifyHeroCharacteristics', [$this->createMyNewCharacteristics()]);
     }
 
-//    function it_should_allow_to_modify_Hero_Endurance()
-//    {
-//        $this->hitHero();
-//        $this->cureHero();
-//    }
+    function it_should_allow_to_hit_Hero(Hero $hero, Hit $hit)
+    {
+        $this->createHero($hero);
+        $hero->hit($hit)->shouldBeCalled();
+        $this->hitHero($hit);
+    }
 
+    function it_should_not_allow_to_hit_a_hero_if_non_defined(Hit $hit)
+    {
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('hitHero', [$hit]);
+    }
 
-//    function it_should_allow_to_modify_Hero_Endurance()
-//    {
-//        $this->hitHero();
-//        $this->cureHero();
-//    }
+    function it_should_allow_to_cure_Hero(Hero $hero, Cure $cure)
+    {
+        $this->createHero($hero);
+        $hero->cure($cure)->shouldBeCalled();
+        $this->cureHero($cure);
+    }
+
+    function it_should_not_allow_to_cure_a_hero_if_non_defined(Cure $cure)
+    {
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('cureHero', [$cure]);
+    }
 
 //    function it_should_tell_when_the_all_mighty_hero_die()
 //    {
 //
 //    }
 
-//    function it_should_allow_to_start_a_combat_with_an_enemy()
-//    {
-//        $anEnemy = new //enemy
-//    }
-//
+    /*
+     * Combat Management
+     */
+
+    function it_should_allow_to_start_a_combat_with_an_enemy(Enemy $enemy, Hero $hero)
+    {
+        $this->createHero($hero);
+        $this->startCombat($enemy);
+    }
+
+    function it_should_not_allow_to_start_a_combat_when_one_is_already_ongoing(Enemy $enemy, Hero $hero)
+    {
+        $this->createHero($hero);
+        $this->startCombat($enemy);
+        $aNewEnemy = new Enemy($this->createMyNewCharacteristics());
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('startCombat', [$aNewEnemy]);
+    }
+
+    function it_should_not_allow_to_start_a_combat_with_an_enemy_with_no_hero(Enemy $enemy)
+    {
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('startCombat', [$enemy]);
+    }
+
+    function it_should_allow_to_abandon_a_combat(Enemy $enemy, Hero $hero)
+    {
+        $this->createHero($hero);
+        $this->startCombat($enemy);
+        $this->abandonCombat();
+    }
+
+    function it_should_not_allow_to_end_a_combat_when_no_combat_has_begun()
+    {
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('abandonCombat');
+    }
+
+    //cant_start_a_combat_outside_an_adventure
 
     /*
      * Story Management
      */
 
+    //@Todo : to remove .?!
     function it_should_allow_to_start_a_story()
     {
         $this->createHero($this->createMyTestHero());
@@ -113,14 +166,14 @@ class GameSpec extends ObjectBehavior
     function it_should_not_allow_to_start_a_story_with_no_hero_defined()
     {
         $aStory = new Story("My new Story");
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('startStory',[$aStory]);
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('startStory',[$aStory]);
     }
 
     function it_should_allow_to_abandon_the_current_story()
     {
         $this->createHero($this->createMyTestHero());
         $this->startStory($this->createMyTestStory());
-        $this->abandon();
+        $this->abandonStory();
     }
 
     function it_should_allow_a_hero_to_abandon_the_current_story(Hero $hero)
@@ -130,24 +183,19 @@ class GameSpec extends ObjectBehavior
         $hero->beginAdventure($aStory)->shouldBeCalled();
         $this->startStory($aStory);
         $hero->abandonOnGoingStory()->shouldBeCalled();
-        $this->abandon();
+        $this->abandonStory();
     }
 
     function it_should_not_allow_to_abandon_the_current_story_if_no_hero_is_defined()
     {
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('abandon');
-    }
-
-    function it_should_not_allow_to_abandon_the_current_story_if_no_story_is_ongoing()
-    {
-        $this->createHero($this->createMyTestHero());
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('abandon');
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('abandonStory');
     }
 
     /*
      * Travel Management
      */
 
+    //@Todo : change test, it should test the interaction with the hero instead of reading info from hero
     function it_should_allow_to_travel_to_destination_when_story_is_ongoing()
     {
         $aDestination = $this->createMyTestDestination();
@@ -157,14 +205,22 @@ class GameSpec extends ObjectBehavior
         $this->getHeroCurrentLocation()->shouldReturn($aDestination);
     }
 
+    //@Todo to remove this is the responsability of the hero
     function it_should_not_allow_to_travel_to_destination_when_no_story_is_ongoing()
     {
         $this->createHero($this->createMyTestHero());
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('chooseDestination', [$this->createMyTestDestination()]);
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$this->createMyTestDestination()]);
     }
 
     function it_should_not_allow_to_travel_to_destination_when_no_hero_is_defined()
     {
-        $this->shouldThrow('LoneWolf\Exceptions\GameException')->during('chooseDestination', [$this->createMyTestDestination()]);
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$this->createMyTestDestination()]);
+    }
+
+    function it_should_not_allow_to_travel_to_destination_when_the_hero_is_in_a_combat(Destination $destination)
+    {
+        $this->createHero($this->createMyTestHero());
+        $this->startStory($this->createMyTestStory());
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$destination]);
     }
 }
