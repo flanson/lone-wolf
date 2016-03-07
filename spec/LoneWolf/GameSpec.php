@@ -6,8 +6,11 @@ use LoneWolf\Characteristics;
 use LoneWolf\Combat;
 use LoneWolf\CombatSkill;
 use LoneWolf\Cure;
+use LoneWolf\DiceResult;
 use LoneWolf\Endurance;
 use LoneWolf\Enemy;
+use LoneWolf\Exceptions\EnemyDeadException;
+use LoneWolf\Exceptions\HeroDeadException;
 use LoneWolf\Game;
 use LoneWolf\Hero;
 use LoneWolf\Hit;
@@ -27,9 +30,17 @@ class GameSpec extends ObjectBehavior
     public function createMyTestHero()
     {
         $combatSkill = new CombatSkill(6);
-        $endurance = new Endurance(2);
+        $endurance = new Endurance(52);
         $characteristics = new Characteristics($combatSkill, $endurance);
         return new Hero($characteristics);
+    }
+
+    public function createMyTestEnemy()
+    {
+        $combatSkill = new CombatSkill(6);
+        $endurance = new Endurance(42);
+        $characteristics = new Characteristics($combatSkill, $endurance);
+        return new Enemy($characteristics);
     }
 
     public function createMyTestStory()
@@ -110,16 +121,16 @@ class GameSpec extends ObjectBehavior
      * Combat Management
      */
 
-    function it_should_allow_to_start_a_combat_with_an_enemy(Enemy $enemy, Hero $hero)
+    function it_should_allow_to_start_a_combat_with_an_enemy()
     {
-        $this->createHero($hero);
-        $this->startCombat($enemy);
+        $this->createHero($this->createMyTestHero());
+        $this->startCombat($this->createMyTestEnemy());
     }
 
-    function it_should_not_allow_to_start_a_combat_when_one_is_already_ongoing(Enemy $enemy, Hero $hero)
+    function it_should_not_allow_to_start_a_combat_when_one_is_already_ongoing()
     {
-        $this->createHero($hero);
-        $this->startCombat($enemy);
+        $this->createHero($this->createMyTestHero());
+        $this->startCombat($this->createMyTestEnemy());
         $aNewEnemy = new Enemy($this->createMyNewCharacteristics());
         $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('startCombat', [$aNewEnemy]);
     }
@@ -129,10 +140,11 @@ class GameSpec extends ObjectBehavior
         $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('startCombat', [$enemy]);
     }
 
-    function it_should_allow_to_abandon_a_combat(Enemy $enemy, Hero $hero)
+    //@TODO how to check ?
+    function it_should_allow_to_abandon_a_combat()
     {
-        $this->createHero($hero);
-        $this->startCombat($enemy);
+        $this->createHero($this->createMyTestHero());
+        $this->startCombat($this->createMyTestEnemy());
         $this->abandonCombat();
     }
 
@@ -217,10 +229,36 @@ class GameSpec extends ObjectBehavior
         $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$this->createMyTestDestination()]);
     }
 
-    function it_should_not_allow_to_travel_to_destination_when_the_hero_is_in_a_combat(Destination $destination)
+    function it_should_not_allow_to_travel_to_destination_when_the_hero_is_in_a_combat(Story $story, Destination $destination)
+    {
+        $this->createHero($this->createMyTestHero());
+        $this->startStory($story);
+        $this->startCombat($this->createMyTestEnemy());
+        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$destination]);
+    }
+
+
+    function it_should_play()
     {
         $this->createHero($this->createMyTestHero());
         $this->startStory($this->createMyTestStory());
-        $this->shouldThrow(self::GAME_EXCEPTION_NAME)->during('chooseDestination', [$destination]);
+        $this->chooseDestination($this->createMyTestDestination());
+        $this->chooseDestination($this->createMyTestDestination());
+        $this->chooseDestination($this->createMyTestDestination());
+        $combat = $this->startCombat($this->createMyTestEnemy());
+        try {
+            $combat->rolledDice(new DiceResult(5));
+            $combat->rolledDice(new DiceResult(7));
+            $combat->rolledDice(new DiceResult(1));
+            $combat->rolledDice(new DiceResult(0));
+            $combat->rolledDice(new DiceResult(9));
+        } catch (EnemyDeadException $e) {
+//            send to combat win page....
+        } catch (HeroDeadException $e) {
+//            send to die page....
+        } finally {
+            $this->abandonCombat();
+        }
+        $this->chooseDestination(new Destination(350));
     }
 }

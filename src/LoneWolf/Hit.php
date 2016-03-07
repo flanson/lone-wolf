@@ -23,6 +23,14 @@ class Hit
     }
 
     /**
+     * @return int
+     */
+    public function getHitValue()
+    {
+        return $this->hitValue;
+    }
+
+    /**
      * @param $hitValue
      * @throws ConstructorException
      */

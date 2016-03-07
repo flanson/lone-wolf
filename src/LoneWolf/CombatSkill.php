@@ -22,6 +22,17 @@ class CombatSkill
         $this->combatSkillValue = $combatSkillValue;
     }
 
+    public function getCombatSkillValue()
+    {
+        return $this->combatSkillValue;
+    }
+
+    public function compareTo(CombatSkill $combatSkill)
+    {
+        $combatRatioValue = $this->combatSkillValue - $combatSkill->combatSkillValue;
+        //Todo Check combatRatio (between -11 and 11)
+        return new CombatRatio($combatRatioValue);
+    }
     /**
      * @param $combatSkillValue
      * @throws ConstructorException

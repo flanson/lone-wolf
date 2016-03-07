@@ -2,6 +2,8 @@
 
 namespace spec\LoneWolf;
 
+use LoneWolf\CombatRatio;
+use LoneWolf\CombatSkill;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -9,7 +11,7 @@ class CombatSkillSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith(5);
+        $this->beConstructedWith(28);
     }
 
     function it_is_initializable()
@@ -21,5 +23,21 @@ class CombatSkillSpec extends ObjectBehavior
     {
         $this->beConstructedWith(-5);
         $this->shouldThrow('LoneWolf\Exceptions\ConstructorException')->duringInstantiation();
+    }
+
+    function it_should_allow_to_compare_to_an_other_com()
+    {
+        $combatRatio = new CombatRatio(5);
+        $anOtherCombatSkill = new CombatSkill(23);
+        $this->compareTo($anOtherCombatSkill)->shouldEqualTo($combatRatio);
+    }
+
+    public function getMatchers()
+    {
+        return [
+            'equalTo' => function ($subject, $key) {
+                return $subject->equalsTo($key);
+            },
+        ];
     }
 }

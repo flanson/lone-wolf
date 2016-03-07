@@ -30,14 +30,19 @@ class Characteristics
 
     function hitEndurance(Hit $hit)
     {
-
+        $this->endurance->hit($hit);
     }
 
     function cureEndurance(Cure $cure)
     {
-
+        $this->endurance->cure($cure);
     }
 
+
+    public function compareCombatSkillTo(Characteristics $characteristics)
+    {
+        return $this->combatSkill->compareTo($characteristics->combatSkill);
+    }
     /**
      * @param Endurance $endurance
      * @throws ConstructorException

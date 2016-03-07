@@ -23,6 +23,14 @@ class Cure
     }
 
     /**
+     * @return int
+     */
+    public function getCureValue()
+    {
+        return $this->cureValue;
+    }
+
+    /**
      * @param $cureValue
      * @throws ConstructorException
      */

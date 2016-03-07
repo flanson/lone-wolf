@@ -3,9 +3,11 @@
 namespace spec\LoneWolf;
 
 use LoneWolf\Characteristics;
+use LoneWolf\CombatRatio;
 use LoneWolf\CombatSkill;
 use LoneWolf\Cure;
 use LoneWolf\Endurance;
+use LoneWolf\Enemy;
 use LoneWolf\Hero;
 use LoneWolf\Hit;
 use LoneWolf\Story;
@@ -29,6 +31,10 @@ class HeroSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
+//        $this->shouldHaveType('Movie');
+//        $this->shouldReturnAnInstanceOf('Movie');
+//        $this->shouldBeAnInstanceOf('Movie');
+//        $this->shouldImplement('Movie');
         $this->shouldHaveType('LoneWolf\Hero');
     }
 
@@ -54,6 +60,14 @@ class HeroSpec extends ObjectBehavior
     {
         $characteristics->cureEndurance($cure)->shouldBeCalled();
         $this->cure($cure);
+    }
+
+    function it_should_allow_to_compare_to_enemy()
+    {
+        $this->beConstructedWith($this->createMyNewCharacteristics());
+        $combatRatio = new CombatRatio(2);
+        $enemy = new Enemy(new Characteristics(new CombatSkill(18), new Endurance(10)));
+        $this->compareCombatRatio($enemy)->shouldEqualTo($combatRatio);
     }
 
     /*
@@ -92,4 +106,12 @@ class HeroSpec extends ObjectBehavior
         $this->getCurrentLocation()->shouldReturn($destination);
     }
 
+    public function getMatchers()
+    {
+        return [
+            'equalTo' => function ($subject, $key) {
+                return $subject->equalsTo($key);
+            },
+        ];
+    }
 }

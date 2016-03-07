@@ -52,6 +52,11 @@ class Hero
         $this->characteristics->cureEndurance($cure);
     }
 
+    public function compareCombatRatio(Enemy $enemy)
+    {
+        return $this->characteristics->compareCombatSkillTo($enemy->getCharacteristics());
+    }
+
     /*
      * Story
      */

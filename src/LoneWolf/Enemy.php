@@ -29,6 +29,14 @@ class Enemy
         return $this;
     }
 
+    /**
+     * @return Characteristics
+     */
+    public function getCharacteristics()
+    {
+        return $this->characteristics;
+    }
+
     //TODO factorise with Hero
     function hit(Hit $hit)
     {

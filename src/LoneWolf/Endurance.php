@@ -3,13 +3,15 @@
 namespace LoneWolf;
 
 use LoneWolf\Exceptions\ConstructorException;
+use LoneWolf\Exceptions\HeroDeadException;
 
 class Endurance
 {
     /**
      * @var int
      */
-    private $combatSkillValue;
+    private $enduranceValue;
+    private $enduranceMaxValue;
 
     /**
      * CombatSkill constructor.
@@ -21,7 +23,24 @@ class Endurance
 //        if ($enduranceValue < 0) {
 //            throw new ConstructorException('You can\'t have a negative endurance value');
 //        }
-        $this->combatSkillValue = $enduranceValue;
+        $this->enduranceValue = $enduranceValue;
+        $this->enduranceMaxValue = $enduranceValue;
+    }
+
+    function hit(Hit $hit)
+    {
+        $this->enduranceValue = $this->enduranceValue - $hit->getHitValue();
+        if ($this->isNegative()) {
+            throw new HeroDeadException('Here / Enemy is Dead');
+        }
+    }
+
+    function cure(Cure $cure)
+    {
+        $this->enduranceValue = $this->enduranceValue + $cure->getCureValue();
+        if ($this->enduranceValue > $this->enduranceMaxValue) {
+            $this->enduranceValue = $this->enduranceMaxValue;
+        }
     }
 
     /**
@@ -29,7 +48,7 @@ class Endurance
      */
     public function isNegative()
     {
-        return ($this->combatSkillValue < 0);
+        return ($this->enduranceValue < 0);
     }
 
     //combine
