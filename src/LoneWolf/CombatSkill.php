@@ -30,7 +30,7 @@ class CombatSkill
     public function compareTo(CombatSkill $combatSkill)
     {
         $combatRatioValue = $this->combatSkillValue - $combatSkill->combatSkillValue;
-        //Todo Check combatRatio (between -11 and 11)
+        //Todo Check combatRatio (between -11 and 11) inside CombatRatio
         return new CombatRatio($combatRatioValue);
     }
     /**

@@ -31,6 +31,7 @@ class CombatSkillSpec extends ObjectBehavior
         $anOtherCombatSkill = new CombatSkill(23);
         $this->compareTo($anOtherCombatSkill)->shouldEqualTo($combatRatio);
     }
+    //Todo add test with combat ratio difference greater than 11
 
     public function getMatchers()
     {

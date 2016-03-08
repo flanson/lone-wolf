@@ -6,11 +6,15 @@ App to manage Lone Wolf adventure (need the books to play)
 
 ### Todos
 
- - [ ] dev minimal functions
-    - [ ] hit/cure
-    - [ ] combat system
+ - [x] dev minimal functions with specs
+ - [ ] add postgresql (or linked to postgresql of Heroku)
+ - [ ] add symfony (in an other project ?)
+ - [ ] add doctrine + config
+ - [ ] add doctrine migration
  - [ ] insert into MVC
  - [ ] add templates
+ - [ ] add postgresql to Heroku
+ - [ ] add run phpspec and block deploiement if negative
  - [ ] add [grunt][grunt]
 
 License

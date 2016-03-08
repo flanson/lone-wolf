@@ -16,5 +16,6 @@ class CombatRatioSpec extends ObjectBehavior
     {
         $this->shouldHaveType('LoneWolf\CombatRatio');
     }
+    //Todo Check combatRatio (between -11 and 11) inside CombatRatio
 
 }
