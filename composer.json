@@ -2,7 +2,7 @@
     "name": "flanson/lone-wolf",
     "description": "Lone Wolf Game for private purpose",
     "type": "library",
-    "require": {
+    "require-dev": {
         "phpspec/phpspec": "^2.4"
     },
     "config": {
