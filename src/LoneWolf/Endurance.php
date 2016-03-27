@@ -27,12 +27,17 @@ class Endurance
         $this->enduranceMaxValue = $enduranceValue;
     }
 
+    public function getLife()
+    {
+        return $this->enduranceValue;
+    }
+
     function hit(Hit $hit)
     {
         $this->enduranceValue = $this->enduranceValue - $hit->getHitValue();
-        if ($this->isNegative()) {
-            throw new HeroDeadException('Here / Enemy is Dead');
-        }
+//        if ($this->isNegative()) {
+//            throw new HeroDeadException('Here / Enemy is Dead');
+//        }
     }
 
     function cure(Cure $cure)

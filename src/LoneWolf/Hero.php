@@ -5,6 +5,10 @@ namespace LoneWolf;
 use LoneWolf\Exceptions\GameException;
 use LoneWolf\Story\Destination;
 
+/**
+ * Class Hero
+ * @package LoneWolf
+ */
 class Hero
 {
     /**
@@ -30,10 +34,22 @@ class Hero
         $this->characteristics = $characteristics;
     }
 
+    /**
+     * @return int
+     */
+    public function getLife()
+    {
+        return $this->characteristics->getLife();
+    }
+
     /*
      * Characteristics management
      */
 
+    /**
+     * @param Characteristics $characteristics
+     * @return $this
+     */
     public function modifyCharacteristics(Characteristics $characteristics)
     {
         $this->characteristics = $characteristics;
@@ -41,17 +57,27 @@ class Hero
     }
 
     //TODO factorise with Enemy
-    function hit(Hit $hit)
+    /**
+     * @param Hit $hit
+     */
+    public function hit(Hit $hit)
     {
         $this->characteristics->hitEndurance($hit);
     }
 
     //TODO factorise with Enemy
-    function cure(Cure $cure)
+    /**
+     * @param Cure $cure
+     */
+    public function cure(Cure $cure)
     {
         $this->characteristics->cureEndurance($cure);
     }
 
+    /**
+     * @param Enemy $enemy
+     * @return CombatRatio
+     */
     public function compareCombatRatio(Enemy $enemy)
     {
         return $this->characteristics->compareCombatSkillTo($enemy->getCharacteristics());
@@ -61,18 +87,29 @@ class Hero
      * Story
      */
 
+    /**
+     * @param Story $story
+     * @throws GameException
+     */
     public function beginAdventure(Story $story)
     {
         $this->aHeroCanOnlyHaveOneOngoingAdventure();
         $this->currentStory = $story;
     }
 
+    /**
+     * @throws GameException
+     */
     public function abandonOnGoingStory()
     {
         $this->aHeroCantAbandonWhenNoStoryHasBegun();
         $this->currentStory = null;
     }
 
+    /**
+     * @param Destination $newDestination
+     * @throws GameException
+     */
     public function travelTo(Destination $newDestination)
     {
         $this->aHeroCantTravelWhenNoStoryIsOngoing();
@@ -89,12 +126,18 @@ class Hero
      */
 
     //@todo tell, don't ask => should be private
+    /**
+     * @return bool
+     */
     public function hasACurrentStory()
     {
         return ($this->currentStory !== null);
     }
 
     //@todo tell, don't ask => should be private
+    /**
+     * @return Destination|null
+     */
     public function getCurrentLocation()
     {
         if (!$this->hasACurrentStory()) {
@@ -108,6 +151,9 @@ class Hero
      * Spec of Hero
      */
 
+    /**
+     * @throws GameException
+     */
     private function aHeroCanOnlyHaveOneOngoingAdventure()
     {
         if ($this->hasACurrentStory()) {
@@ -115,6 +161,9 @@ class Hero
         }
     }
 
+    /**
+     * @throws GameException
+     */
     private function aHeroCantAbandonWhenNoStoryHasBegun()
     {
         if (!$this->hasACurrentStory()) {
@@ -122,6 +171,9 @@ class Hero
         }
     }
 
+    /**
+     * @throws GameException
+     */
     private function aHeroCantTravelWhenNoStoryIsOngoing()
     {
         if (!$this->hasACurrentStory()) {

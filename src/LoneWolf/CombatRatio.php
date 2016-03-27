@@ -23,6 +23,5 @@ class CombatRatio
     public function equalsTo(CombatRatio $combatRatio)
     {
         return $this->combatRationValue === $combatRatio->getCombatRationValue();
-//        return $this->combatRationValue === $combatRatio->combatRationValue;
     }
 }

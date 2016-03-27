@@ -3,13 +3,14 @@
     "description": "Lone Wolf Game for private purpose",
     "type": "library",
     "require-dev": {
-        "phpspec/phpspec": "^2.4"
+        "phpspec/phpspec": "^2.4",
+        "henrikbjorn/phpspec-code-coverage": "^2.0"
     },
     "config": {
         "bin-dir": "bin"
     },
     "autoload": {"psr-0": {"": "src"}},
-    "license": "Private",
+    "license": "proprietary",
     "authors": [
         {
             "name": "flanson",

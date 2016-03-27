@@ -37,6 +37,11 @@ class Enemy
         return $this->characteristics;
     }
 
+    public function getLife()
+    {
+        return $this->characteristics->getLife();
+    }
+
     //TODO factorise with Hero
     function hit(Hit $hit)
     {

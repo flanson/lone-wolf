@@ -38,6 +38,10 @@ class Characteristics
         $this->endurance->cure($cure);
     }
 
+    public function getLife()
+    {
+        return $this->endurance->getLife();
+    }
 
     public function compareCombatSkillTo(Characteristics $characteristics)
     {
