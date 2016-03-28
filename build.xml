@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project name="Lone wolf" default="initialize">
+
+    <target name="phpspec"
+            description="Run phpspec spec validations">
+        <exec executable="cmd" failonerror="true">
+            <arg value="/c"/>
+            <arg value="${basedir}/bin/phpspec.bat"/>
+            <arg value="run"/>
+        </exec>
+    </target>
+
+    <target name="phpdoc-ci"
+            depends="setup-artefacts"
+            description="Generate API documentation using PHPDocumentor">
+        <exec executable="cmd" failonerror="true">
+            <arg value="/c"/>
+            <arg value="phpdoc"/>
+            <arg value="-d"/>
+            <arg path="${basedir}/src"/>
+            <arg value="-t"/>
+            <arg path="${basedir}/build/data/api"/>
+        </exec>
+    </target>
+
+    <target name="phpcpd-ci"
+            depends="setup-artefacts"
+            description="Find duplicate code using PHPCPD and log result in XML format. Intended for usage within a continuous integration environment.">
+        <exec executable="cmd" failonerror="true">
+            <arg value="/c"/>
+            <arg value="phpcpd"/>
+            <arg value="--log-pmd"/>
+            <arg path="${basedir}/build/data/phpcpd/pmd-cpd.xml"/>
+            <arg path="${basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="setup-artefacts"
+            unless="setup-artefacts.done"
+            description="Setup build data artefacts">
+        <mkdir dir="${basedir}/build/data/api"/>
+        <mkdir dir="${basedir}/build/data/coverage"/>
+        <mkdir dir="${basedir}/build/data/logs"/>
+        <mkdir dir="${basedir}/build/data/pdepend"/>
+        <mkdir dir="${basedir}/build/data/phpdox"/>
+        <mkdir dir="${basedir}/build/data/phpcpd"/>
+        <property name="setup-artefacts.done" value="true"/>
+    </target>
+
+    <target name="teardown-artefacts"
+            unless="teardown-artefacts.done"
+            description="Teardown build data artefacts">
+        <!--<delete dir="${basedir}/app/cache"/>-->
+        <!--<delete dir="${basedir}/app/logs"/>-->
+        <delete dir="${basedir}/build/data/api"/>
+        <delete dir="${basedir}/build/data/coverage"/>
+        <delete dir="${basedir}/build/data/logs"/>
+        <delete dir="${basedir}/build/data/pdepend"/>
+        <delete dir="${basedir}/build/data/phpdox"/>
+        <delete dir="${basedir}/build/data/phpcpd"/>
+        <delete dir="${basedir}/build/data"/>
+        <property name="teardown-artefacts.done" value="true"/>
+    </target>
+
+</project>
