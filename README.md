@@ -12,8 +12,7 @@ This project is the library that symfony should use (use this as Domain logic)
  - [x] dev minimal functions with specs
  - [ ] add more East-oriented programming [1][east-OOP1],[2][east-OOP2],[3][east-OOP3]
  - [ ] look for TDD & Interface
- - [ ] Should the spec appear when ship in the vendor (if other project require this library) ?
- - [ ] look more exemple of phpspec [1][phpspec-ex1], [2][phpspec-ex2]
+ - [ ] look more example of phpSpec [1][phpspec-ex1], [2][phpspec-ex2]
 
 License
 ----

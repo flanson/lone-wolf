@@ -3,10 +3,10 @@ formatter.name: pretty
 extensions:
     - PhpSpec\Extension\CodeCoverageExtension
 
-#code_coverage:
-#  format:
-#    - html
-#    - clover
-#  output:
-#    html: coverage
-#    clover: coverage.xml
+code_coverage:
+  format:
+    - html
+    - clover
+  output:
+    html: build/coverage
+    clover: build/logs/coverage.xml
