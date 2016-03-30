@@ -10,7 +10,7 @@
     </target>
 
     <target name="build"
-            depends="setup-artefacts,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc-ci,phpspec,phpcb"/>
+            depends="setup-artefacts,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc-ci,phpspec,phpcb"/>
 
     <target name="build-parallel"
             depends="setup-artefacts,lint,tools-parallel,phpspec,phpcb"/>
@@ -90,45 +90,39 @@
         </apply>
     </target>
 
-    <target name="phploc"
-            description="Measure project size using PHPLOC">
-        <echo message="Couldn't install phploc - pb with dependencies in composer global install"/>
-        <echo message="TODO : install" level="warning"/>
-    </target>
-    <!--<target name="phploc" description="Measure project size using PHPLOC">-->
-        <!--<exec executable="cmd">-->
-            <!--<arg value="/c"/>-->
-            <!--<arg value="phploc" />-->
-            <!--&lt;!&ndash; exclude tests directory &ndash;&gt;-->
+    <!--<target name="phploc"-->
+            <!--description="Measure project size using PHPLOC">-->
+        <!--<echo message="Couldn't install phploc - pb with dependencies in composer global install"/>-->
+        <!--<echo message="TODO : install" level="warning"/>-->
+    <!--</target>-->
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="phploc" />
+            <!-- exclude tests directory -->
             <!--<arg value="&#45;&#45;exclude" />-->
             <!--<arg path="${basedir}/spec" />-->
-            <!--<arg value="&#45;&#45;log-csv" />-->
-            <!--<arg value="${basedir}/build/logs/phploc.csv" />-->
-            <!--<arg path="${basedir}/src" />-->
-        <!--</exec>-->
-    <!--</target>-->
+            <arg value="--log-csv" />
+            <arg value="${basedir}/build/logs/phploc.csv" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
 
-    <!--<target name="phploc"-->
-            <!--description="Measure project size using PHPLOC and print human readable output. Intended for usage on the command line.">-->
-        <!--<exec executable="${toolsdir}phploc">-->
-            <!--<arg value="&#45;&#45;count-tests"/>-->
-            <!--<arg path="${basedir}/src"/>-->
-            <!--&lt;!&ndash;<arg path="${basedir}/tests"/>&ndash;&gt;-->
-        <!--</exec>-->
-    <!--</target>-->
-
-    <!--<target name="phploc-ci"-->
-            <!--description="Measure project size using PHPLOC and log result in CSV and XML format. Intended for usage within a continuous integration environment.">-->
-        <!--<exec executable="${toolsdir}phploc">-->
-            <!--<arg value="&#45;&#45;count-tests"/>-->
-            <!--<arg value="&#45;&#45;log-csv"/>-->
-            <!--<arg path="${basedir}/build/logs/phploc.csv"/>-->
-            <!--<arg value="&#45;&#45;log-xml"/>-->
-            <!--<arg path="${basedir}/build/logs/phploc.xml"/>-->
-            <!--<arg path="${basedir}/src"/>-->
-            <!--&lt;!&ndash;<arg path="${basedir}/tests"/>&ndash;&gt;-->
-        <!--</exec>-->
-    <!--</target>-->
+    <target name="phploc-ci"
+            description="Measure project size using PHPLOC and log result in CSV and XML format. Intended for usage within a continuous integration environment.">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="phploc" />
+            <!-- exclude tests directory -->
+            <!--<arg value="&#45;&#45;exclude" />-->
+            <!--<arg path="${basedir}/spec" />-->
+            <arg value="--log-csv" />
+            <arg value="${basedir}/build/logs/phploc.csv" />
+            <arg value="--log-xml"/>
+            <arg path="${basedir}/build/logs/phploc.xml"/>
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
 
     <target name="pdepend"
             description="Calculate software metrics using PHP_Depend">
