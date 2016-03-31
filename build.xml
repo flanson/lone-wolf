@@ -220,7 +220,7 @@
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
-        <exec executable="cmd" failonerror="true">
+        <exec executable="cmd">
             <arg value="/c"/>
             <arg value="phpcb"/>
             <arg value="--log" />
